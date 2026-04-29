@@ -7,11 +7,9 @@ void main() {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 224, 247, 246),
-
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color.fromARGB(255, 0, 150, 136),
         ),
-
         appBarTheme: const AppBarTheme(
           elevation: 0,
           centerTitle: true,
@@ -37,151 +35,45 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
-
-  final TextEditingController _opcaoController = TextEditingController();
-  String? _erroTexto;
-  final List<String> _opcoes = [];
-
   final Random _random = Random();
 
-  // 🔥 NOVA PALETA VERDE ÁGUA
-  static const Color _rosa = Color.fromARGB(255, 0, 150, 136); // principal
-  static const Color _rosaClaro = Color.fromARGB(255, 224, 247, 246); // fundo
-  static const Color _rosaMedia = Color.fromARGB(255, 77, 208, 200); // destaque
+  static const Color _principal = Color.fromARGB(255, 0, 150, 136);
+  static const Color _claro = Color.fromARGB(255, 224, 247, 246);
+  static const Color _medio = Color.fromARGB(255, 77, 208, 200);
   static const Color _cinza = Color.fromARGB(255, 38, 90, 87);
-  static const Color _vermelho = Color.fromARGB(255, 46, 102, 91);
-  static const Color _verde = Color.fromARGB(255, 74, 179, 146);
 
-  void _sortear() {
-    if (_opcoes.isEmpty || _opcoes.length < 2) {
-      _mostrarErro("Adicione ao menos 2 opções para sortear!");
-      return;
-    }
+  final List<String> _frases = [
+    "Acredite em você mesmo",
+    "Você é mais forte do que imagina",
+    "Nunca desista dos seus sonhos",
+    "Tudo começa com o primeiro passo",
+    "Você consegue!",
+    "Hoje é um novo dia ",
+    "Confie no processo",
+    "Seja sua melhor versão",
+    "Seu esforço vai valer a pena",
+    "Grandes coisas levam tempo ",
+    "Insista, persista, mas nunca desista, um dia você conquista!",
+    "Nunca desista!",
+    "Não deixe para amanhã, o que pode fazer hoje",
+  ];
 
-    final int indice = _random.nextInt(_opcoes.length);
-    final String sorteado = _opcoes[indice];
+  String _fraseAtual = "";
 
-    _mostrarResultado(sorteado);
-  }
+  void _sortearFrase() {
+    final int indice = _random.nextInt(_frases.length);
+    final String frase = _frases[indice];
 
-  void _mostrarErro(String mensagem) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.warning_amber_rounded, color: Colors.white),
-            const SizedBox(width: 12),
-            Expanded(child: Text(mensagem)),
-          ],
-        ),
-        backgroundColor: _vermelho,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        duration: const Duration(seconds: 5),
-      ),
-    );
-  }
-
-  void _mostrarSucesso(String opcao) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.white),
-            const SizedBox(width: 12),
-            Expanded(child: Text('"$opcao" adicionada!')),
-          ],
-        ),
-        backgroundColor: _verde,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _adicionarOpcao() {
-    final texto = _opcaoController.text.trim();
-
-    if (texto.isEmpty) {
-      setState(() => _erroTexto = 'Digite ao menos uma opção');
-      return;
-    }
-
-    if (_opcoes.contains(texto)) {
-      setState(() => _erroTexto = 'Essa opção já foi adicionada!');
-      return;
-    }
-
-    setState(() {
-      _opcoes.add(texto);
-      _erroTexto = null;
-      _opcaoController.clear();
-    });
-
-    _mostrarSucesso(texto);
-  }
-
-  void _removerOpcao(int index) {
-    setState(() => _opcoes.removeAt(index));
+    _mostrarResultado(frase);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _rosaClaro,
+      backgroundColor: _claro,
 
       appBar: AppBar(
-        title: const Text('🎲 Sorteador de Decisões'),
-        actions: [
-          if (_opcoes.isNotEmpty)
-            IconButton(
-              icon: const Icon(Icons.delete_sweep),
-              tooltip: 'Limpar tudo',
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: const Text('Limpar lista?'),
-                    content: const Text('Todas as opções serão removidas.'),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16)),
-                    actions: [
-                      TextButton(
-                          onPressed: () => Navigator.pop(ctx),
-                          child: const Text('Cancelar')),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() => _opcoes.clear());
-                          Navigator.pop(ctx);
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: _vermelho,
-                            foregroundColor: Colors.white),
-                        child: const Text('Limpar'),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: Center(
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.25),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text('${_opcoes.length} opções',
-                    style:
-                        const TextStyle(color: Colors.white, fontSize: 13)),
-              ),
-            ),
-          ),
-        ],
+        title: const Text('❤️ Frases Motivacionais'),
       ),
 
       body: SingleChildScrollView(
@@ -198,82 +90,71 @@ class _MainAppState extends State<MainApp> {
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => Container(
                   height: 160,
-                  color: _rosaMedia,
+                  color: _medio,
                   child: const Center(
-                      child: Text('🎲', style: TextStyle(fontSize: 64))),
+                    child: Text('❤️', style: TextStyle(fontSize: 64)),
+                  ),
                 ),
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
 
-            TextField(
-              controller: _opcaoController,
-              onChanged: (_) => setState(() => _erroTexto = null),
-              onSubmitted: (_) => _adicionarOpcao(),
-              decoration: InputDecoration(
-                hintText: 'Ex: Pizza, Sushi, Hambúrguer...',
-                hintStyle: const TextStyle(
-                    color: Color.fromARGB(255, 150, 200, 195)),
-                labelText: 'Nova opção',
-                labelStyle: const TextStyle(color: _cinza),
-                prefixIcon:
-                    const Icon(Icons.add_circle_outline, color: _rosa),
-                errorText: _erroTexto,
-                filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide(
-                      color: _erroTexto != null
-                          ? _vermelho
-                          : const Color.fromARGB(255, 200, 230, 225),
-                      width: 1.5),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide:
-                      const BorderSide(color: _rosa, width: 2.0),
-                ),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFFEEEEEE)),
+              ),
+              child: const Text(
+                "Um clique, uma frase motivacional ❤️",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, color: _cinza),
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 30),
 
             ElevatedButton.icon(
-              onPressed: _adicionarOpcao,
-              icon: const Icon(Icons.add),
-              label: const Text('Adicionar opção'),
+              onPressed: _sortearFrase,
+              icon: const Icon(Icons.auto_awesome),
+              label: const Text(
+                "GERAR FRASE",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1,
+                ),
+              ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: _verde,
+                backgroundColor: _principal,
                 foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 18),
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
             ),
 
             const SizedBox(height: 24),
-
-            ElevatedButton.icon(
-              onPressed: _opcoes.length >= 2 ? _sortear : null,
-              icon: const Icon(Icons.shuffle),
-              label: const Text('SORTEAR'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _rosa,
-                foregroundColor: Colors.white,
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 
+  // 🎉 DIALOG IGUAL AO DO SORTEADOR (adaptado)
   void _mostrarResultado(String resultado) {
     showDialog(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24)),
+          backgroundColor: Colors.white,
+
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -281,25 +162,55 @@ class _MainAppState extends State<MainApp> {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: _rosaMedia,
+                  color: _medio,
                   shape: BoxShape.circle,
                 ),
                 child: const Center(
-                  child: Text('🎉', style: TextStyle(fontSize: 40)),
+                  child: Text('💡', style: TextStyle(fontSize: 40)),
                 ),
               ),
+
               const SizedBox(height: 16),
+
+              const Text(
+                'Sua motivação:',
+                style: TextStyle(fontSize: 14, color: _cinza),
+              ),
+
+              const SizedBox(height: 8),
+
               Text(
                 resultado,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: _rosa,
-                ),
                 textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: _principal,
+                ),
               ),
             ],
           ),
+
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                Future.delayed(const Duration(milliseconds: 200), _sortearFrase);
+              },
+              child: const Text('Gerar outra', style: TextStyle(color: _cinza)),
+            ),
+
+            ElevatedButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _principal,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+              child: const Text('Gostei!'),
+            ),
+          ],
         );
       },
     );
